@@ -15,14 +15,12 @@ const CRUD = {
     const result = await Fw.find();
     return result;
   },
-  async update() {
-    const result = await Fw.find();
-    console.log(result);
+  async update({index, votes}) {
+    const result = await Fw.updateOne({ index }, { $set: { votes } });
     return result;
   },
-  async del() {
-    const result = await Fw.find();
-    console.log(result);
+  async del(fields) {
+    const result = await Fw.deleteOne(fields);
     return result;
   },
 };

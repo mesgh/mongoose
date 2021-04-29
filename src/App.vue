@@ -11,10 +11,15 @@
       <td>ID</td>
       <td>Title</td>
       <td>Votes</td>
+      <td colspan="2">Vote</td>
       <td></td>
     </tr>
     <tr v-for="(frame, index) in frames" :key="index">
-      <Frame :frame="frame" />
+      <Frame 
+        :frame="frame" 
+        @remove="removeHandler"
+        @vote="voteHandler"
+      />
     </tr>
   </table>
 </template>
@@ -34,25 +39,37 @@ export default {
     };
   },
   async mounted() {
-    const res = await mongo.read().catch((err) => console.warn(err));
-    this.frames = res.data || [];
-    console.log(this.frames);
+    await this.read();
   },
   methods : {
     async create (e) {
       const form = e.target.form;
       const title = form.elements.Title.value;
       if (title) {
+        form.elements.Title.value = '';
         const res = await mongo.create({
-          index: this.frames.length + 1,
+          index: this.frames.length,
           title: title,
           votes: 0,
         }).catch((err) => console.warn(err));
-        this.frames.push(res);
+        this.frames.push(res.data);
       } else {
         form.elements.Title.focus();
       }
-    }
+    },
+    async removeHandler (index) {
+      console.log(index);
+      await mongo.del({index}).catch((err) => console.warn(err));
+      await this.read();
+    },
+    async voteHandler (data) {
+      await mongo.update(data).catch((err) => console.warn(err));
+      await this.read();
+    },
+    async read () {
+      const res = await mongo.read().catch((err) => console.warn(err));
+      this.frames = res.data || [];
+    },
   },
 };
 </script>

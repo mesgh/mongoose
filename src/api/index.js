@@ -15,10 +15,10 @@ export const mongo = {
     read() {
         return httpRequest.get(`/mongo/read`);
     },
-    update() {
-        return httpRequest.post(`/mongo/update/`);
+    update(data) {
+        return httpRequest.post(`/mongo/update/`, data);
     },
-    del() {
-        return httpRequest.delete(`/mongo/del/`);
+    del(data) {
+        return httpRequest.post(`/mongo/del/`, data);
     },
 };

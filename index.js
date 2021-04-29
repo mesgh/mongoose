@@ -24,17 +24,33 @@ app
       .status(200)
       .send(result);
   })
-  .post('/api/mongo/update', async r => {
-    const result = await CRUD.read();
-    r.res
-      .status(200)
-      .send(result);
+  .post('/api/mongo/update', async (req, res) => {
+    let body = '';
+    req
+    .on('data', chunk => {
+      body += chunk.toString();
+    })
+    .on('end', async () => {
+      const frame = JSON.parse(body);
+      await CRUD.update(frame);
+      res
+        .status(200)
+        .end();
+    });
   })
-  .delete('/api/mongo/del', async r => {
-    const result = await CRUD.read();
-    r.res
-      .status(200)
-      .send(result);
+  .post('/api/mongo/del', async (req, res) => {
+    let body = '';
+    req
+    .on('data', chunk => {
+      body += chunk.toString();
+    })
+    .on('end', async () => {
+      const frame = JSON.parse(body);
+      await CRUD.del(frame);
+      res
+        .status(204)
+        .end();
+    });
   })
   .use(r => {
     r.res
