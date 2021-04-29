@@ -1,10 +1,10 @@
 <template>
   <h4 id="author">Moseev Evgeny</h4>
   <form action="#">
-    <input type="number" name="" id="" placeholder="" />
-    <input type="text" name="" id="" />
-    <input type="number" name="" id="" />
-    <button></button>
+    <input type="text" name="Title" id="Title" placeholder="Title" />
+    <button
+      @click.stop.prevent="create"
+    >Создать</button>
   </form>
   <table>
     <tr>
@@ -38,6 +38,22 @@ export default {
     this.frames = res.data || [];
     console.log(this.frames);
   },
+  methods : {
+    async create (e) {
+      const form = e.target.form;
+      const title = form.elements.Title.value;
+      if (title) {
+        const res = await mongo.create({
+          index: this.frames.length + 1,
+          title: title,
+          votes: 0,
+        }).catch((err) => console.warn(err));
+        this.frames.push(res);
+      } else {
+        form.elements.Title.focus();
+      }
+    }
+  },
 };
 </script>
 
@@ -49,5 +65,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+table { 
+  margin: 30px auto;
 }
 </style>

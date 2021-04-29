@@ -9,8 +9,8 @@ const httpRequest = axios.create({
     }
 });
 export const mongo = {
-    create() {
-        return httpRequest.delete(`/mongo/create`);
+    create(data) {
+        return httpRequest.post(`/mongo/create`, data);
     },
     read() {
         return httpRequest.get(`/mongo/read`);
@@ -19,6 +19,6 @@ export const mongo = {
         return httpRequest.post(`/mongo/update/`);
     },
     del() {
-        return httpRequest.post(`/mongo/del/`);
+        return httpRequest.delete(`/mongo/del/`);
     },
 };

@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { mongo } from "./api";
+import { mongo } from "./../api";
 
 export default {
   name: 'Frame',
@@ -21,7 +21,9 @@ export default {
   },
   methods: {
     del () {
-      mongo.del(this.frame);
+      if (confirm(`Вы уверены, что хотите удалить ${this.frame.title} из списка?`)) {
+        mongo.del(this.frame);
+      }
     }
   },
 }
@@ -30,6 +32,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   td {
-
+    padding: 5px;
+    border: 1px solid black;
   }
 </style>

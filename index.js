@@ -4,12 +4,19 @@ const app = express();
 
 app
   .use(express.static('./dist'))
-  .get('/api/mongo/create', async r => {
-    const { frame } = r.req
-    const result = await CRUD.create(frame);
-    r.res
-      .status(200)
-      .send(result);
+  .post('/api/mongo/create', async (req, res) => {
+    let body = '';
+    req
+    .on('data', chunk => {
+      body += chunk.toString();
+    })
+    .on('end', async () => {
+      const frame = JSON.parse(body);
+      const result = await CRUD.create(frame);
+      res
+        .status(201)
+        .send(result);
+    });
   })
   .get('/api/mongo/read', async r => {
     const result = await CRUD.read();
@@ -17,13 +24,13 @@ app
       .status(200)
       .send(result);
   })
-  .get('/api/mongo/update', async r => {
+  .post('/api/mongo/update', async r => {
     const result = await CRUD.read();
     r.res
       .status(200)
       .send(result);
   })
-  .get('/api/mongo/del', async r => {
+  .delete('/api/mongo/del', async r => {
     const result = await CRUD.read();
     r.res
       .status(200)
